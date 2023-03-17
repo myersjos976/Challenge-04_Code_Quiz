@@ -9,12 +9,15 @@ var question7 = document.querySelector("#question-7");
 var question8 = document.querySelector("#question-8");
 var question9 = document.querySelector("#question-9");
 var question10 = document.querySelector("#question-10");
+var quizOver = document.querySelector("#quiz-over");
 
 var startButton = document.querySelector("#start-button");
 var timerEl = document.querySelector("#timer");
-var isCorrectEl = document.getElementById("bottom-bar");
+var isCorrectEl = document.querySelector("#bottom-bar");
+var finalScoreEl = document.querySelector("#final-score")
 
 var timeLeft;
+var timerInterval;
 var currentQuestion;
 var answerKey = ['b', 'd', 'a', 'c', 'b', 'c', 'd', 'c', 'b', 'a'];
 var questions = [question1, question2, question3, question4, question5, question6, question7, question8, question9, question10];
@@ -27,29 +30,38 @@ var questions = [question1, question2, question3, question4, question5, question
 function openStartPage()
 {
     startPage.style.display = 'block';
-    question1.style.display = 'none';
-    question2.style.display = 'none';
-    question3.style.display = 'none';
+    quizOver.style.display = 'none';
+    for (let x = 0; x < questions.length; x++)
+    {
+        questions[x].style.display = 'none';
+    }
+
+    // When start button is pressed, start the quiz.
+    startButton.addEventListener("click", function(event) {
+    startQuiz();
+    });
 }
 
 // Starts the quiz.
 function startQuiz()
 {
-    openQuestion(1);
+    timerEl.style.display = 'block';
+    isCorrectEl.style.display = 'block';
     startTimer();
+    openQuestion(1);
 }
 
 // Creates a 5 minute timer.
 function startTimer() {
     timeLeft = 400;
-    var timeInterval = setInterval(function () {
-        if (timeLeft > 1) {
+    timerInterval = setInterval(function () {
+        if (timeLeft >= 1) {
             timerEl.textContent = timeLeft;
             timeLeft--;
         }
         else {
             timerEl.textContent = "";
-            clearInterval(timeInterval);
+            clearInterval(timerInterval);
         }
     }, 1000);
 }
@@ -79,14 +91,12 @@ function openQuestion(number)
     var cButton = document.querySelector("#answer-c" + number);
     var dButton = document.querySelector("#answer-d" + number);
 
-
     aButton.addEventListener("click", function(event) {
-        console.log("Clicked");
         if (answerKey[currentQuestion -  1] === 'a') {
-            isCorrectEl.innerText = "Correct";
+            isCorrectEl.textContent = "Correct";
         }
         else {
-            isCorrectEl.innerText = "Incorrect";
+            isCorrectEl.textContent = "Incorrect";
             timeLeft = timeLeft - 10;
         }
 
@@ -100,7 +110,6 @@ function openQuestion(number)
     });
 
     bButton.addEventListener("click", function(event) {
-        console.log("Clicked");
         if (answerKey[currentQuestion - 1] === 'b') {
             isCorrectEl.textContent = "Correct";
         }
@@ -118,7 +127,6 @@ function openQuestion(number)
     });
 
     cButton.addEventListener("click", function(event) {
-        console.log("Clicked");
         if (answerKey[currentQuestion - 1] === 'c') {
             isCorrectEl.textContent = "Correct";
         }
@@ -136,7 +144,6 @@ function openQuestion(number)
     });
 
     dButton.addEventListener("click", function(event) {
-        console.log("Clicked");
         if (answerKey[currentQuestion - 1] === 'd') {
             isCorrectEl.textContent = "Correct";
         }
@@ -161,19 +168,15 @@ function openQuestion(number)
 */
 function openQuizOver()
 {
-    clearInterval();
+    clearInterval(timerInterval);
+    question10.style.display = 'none';
+    timerEl.style.display = 'none';
+    isCorrectEl.style.display = 'none';
+    quizOver.style.display = 'block';
+    finalScoreEl.textContent = "Your final score is: " + timeLeft;
 
     //TODO: Create input box for user's intitials for the high score list and save user's score information.
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 // When webpage is opened, the start page is opened first.
 openStartPage();
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-// When start button is pressed, start the quiz.
-startButton.addEventListener("click", function(event) {
-    startQuiz();
-});
