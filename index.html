@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Coding Quiz</title>
-    <link rel="stylesheet" href="./assets/style.css" />
+    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
   <body>
     <div class="wrapper">
       <header>
         <h1><span>Coding Quiz</span></h1>
         <div class="top-bar">
-          <a href="#high-scores"> View high scores</a> 
+          <a href="#high-scores" id = high-scores-link> View high scores</a> 
           <div id="timer"></div>
         </div>
       </header>
@@ -211,12 +212,32 @@
           <div class="results">
             <label for="initials">Enter initials:</label>
             <input type="initials" name="initials" id="initials"/>
-            <button id="submit-btn" class="btn">Submit</button>
+            <button id="submit-button" class="btnSmall">Submit</button>
 
           </div>
         </div>
       </section>
 
+      <!-- Creates high scores page -->
+      <section id="high-scores">
+        <div class="card-high-scores">
+          <h2>High Scores</h2>
+          <ol id="score-list">
+            <li id="score0"></li>
+            <li id="score1"></li>
+            <li id="score2"></li>
+            <li id="score3"></li>
+            <li id="score4"></li>
+            <li id="score5"></li>
+            <li id="score6"></li>
+            <li id="score7"></li>
+            <li id="score8"></li>
+            <li id="score9"></li>
+          </ol>
+        </div>
+        <button id="go-back-button" class="btn">Go Back</button>
+        <button id="clear-scores-button" class="btn">Clear High Scores</button> 
+      </section>
     </div>
 
     <script src="./assets/script.js"></script>
