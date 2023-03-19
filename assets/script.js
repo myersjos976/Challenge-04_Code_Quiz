@@ -25,9 +25,10 @@ var scoreListEl = document.querySelector("#score-list");
 
 var timeLeft;
 var timerInterval;
-var highScores;
+var highScores = [];
 var answerKey = ['b', 'd', 'a', 'c', 'b', 'c', 'd', 'c', 'b', 'a'];
 var questions = [question1, question2, question3, question4, question5, question6, question7, question8, question9, question10];
+
 
 /*
     Clears all pages and elements from the screen.
@@ -96,7 +97,7 @@ function openQuestionPage(number)
 {
     var currentQuestion = number;
     
-    //Clears the previous question if there is one, else clears start page.
+    // Clears the previous question if there is one, else clears start page.
     if (currentQuestion > 1) {
         questions[currentQuestion - 2].style.display = 'none';
     }
@@ -104,7 +105,7 @@ function openQuestionPage(number)
         startPage.style.display = 'none';
     }
 
-    //Now display the new question.
+    // Now display the new question.
     questions[currentQuestion - 1].style.display = 'block';
 
     /*  
@@ -124,14 +125,18 @@ function openQuestionPage(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10) {
             
             openQuestionPage(currentQuestion + 1);
         }
-
         else {
             openQuizOverPage();
         }
@@ -143,7 +148,12 @@ function openQuestionPage(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10){
@@ -160,7 +170,12 @@ function openQuestionPage(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10) {
@@ -177,7 +192,12 @@ function openQuestionPage(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10) {
@@ -203,45 +223,45 @@ function openQuizOverPage()
 
     finalScoreEl.textContent = "Your final score is: " + score;
 
-    //Collects initials from the user and stores their score in a 2D array for high scores using local storage.
+    // Collects initials from the user and stores their score in a 2D array for high scores using local storage.
     submitButton.addEventListener("click", function(event) {
         event.preventDefault();       
         var initials = document.querySelector("#initials")
 
-        if (initials === "") {
-            displayMessage("error", "Initials cannot be blank.");
+        if (initials === null) {
+            alert("Initials cannot be blank.");
         }
         else {
             var tempScoreArray;
             var newScore = [initials, score];
             var scoreChecked = newScore;
 
-            //Sorts high scores if array is bigger than 0.
+            // Sorts high scores if array is bigger than 0.
             if(highScores.length > 0) {
                 for (var x = 0; x < highScores.length; x++)
                 {   
-                    //Checks if score is bigger or equal to current score.            
+                    // Checks if score is bigger or equal to current score.            
                     if (scoreChecked[1] >= highScores[x][1]) {
-                        //Store old values in temp array.
+                        // Store old values in temp array.
                         tempScoreArray = highScores[x];
                         
-                        //Put in the new values.
+                        // Put in the new values.
                         highScores[x] = scoreChecked;
 
-                        //Now old array will be compared with rest of the 2D array.                    
+                        // Now old array will be compared with rest of the 2D array.                    
                         scoreChecked = tempScoreArray;
                     }
                 }
             }
+            // Else fill first index with the array from scoreChecked.
             else {
-                highScores.concat(scoreChecked);
+                highScores[0] = scoreChecked;
             }
 
+            // Add highScores 2D array to local storage and open high scores page. 
             localStorage.setItem("highScores", highScores);
-
             openHighScoresPage();
         }
-
     });
 }
 
@@ -254,31 +274,51 @@ function openHighScoresPage()
     clearScreen();
     quizScorePage.style.display = 'block';
 
+    // Button that goes back to start screen.
+    goBackButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        openStartPage();
+        return;
+    });
+
+    // Button that clears high score list.
+    clearScoresButton.addEventListener("click", function(even) {
+        highScores = [];
+        localStorage.clear();
+        for (var r = 0; r < highScores.length; r++)
+        {
+            var scoreRow = document.querySelector("#score" + r);
+            scoreRow.innerHTML = " ";
+        }
+        return;
+    });
+
+    // Check if highScores is in local storage and grabs its value.
     if (localStorage.getItem("highScores") !== null) {
         highScores = localStorage.getItem("highScores");
     }
 
+    // Fills high score list's innerhtml with values from 2D array.
     for (var r = 0; r < highScores.length; r++)
     {
-        var scoreRow = document.querySelector("#score" + r);
-        scoreRow.innerHTML = "" + highScores[r][0] + " " + highScores[r][1]; 
+        //If each index has a value, fill list with each index.
+        if (highScores[r] !== null) {
+            var scoreRow = document.querySelector("#score" + r);
+            scoreRow.innerHTML = "" + highScores[r][0] + " " + highScores[r][1]; 
+        }
+
+        //Else, fill list with blank space.
+        else {
+            var scoreRow = document.querySelector("#score" + r);
+            scoreRow.innerHTML = " ";
+        }
     }
-
-    goBackButton.addEventListener("click", function(event) {
-        event.preventDefault();
-        openStartPage();
-    });
-
-    clearScoresButton.addEventListener("click", function(even) {
-        highScores = [];
-        localStorage.clear();
-    })
 }
 
 // When webpage is opened, the start page is opened first.
 openStartPage();
 
-//When high score link is clicked, show high score page.
+// When high score link is clicked, show high score page.
 highScoreLink.addEventListener("click", function(event) {
     event.preventDefault();
     clearInterval(timerInterval);
