@@ -226,7 +226,7 @@ function openQuizOverPage()
     // Collects initials from the user and stores their score in a 2D array for high scores using local storage.
     submitButton.addEventListener("click", function(event) {
         event.preventDefault();       
-        var initials = document.querySelector("#initials")
+        var initials = document.querySelector("#initials").value
 
         if (initials === null) {
             alert("Initials cannot be blank.");
@@ -259,7 +259,7 @@ function openQuizOverPage()
             }
 
             // Add highScores 2D array to local storage and open high scores page. 
-            localStorage.setItem("highScores", highScores);
+            localStorage.setItem("highScores", JSON.stringify(highScores));
             openHighScoresPage();
         }
     });
@@ -295,7 +295,7 @@ function openHighScoresPage()
 
     // Check if highScores is in local storage and grabs its value.
     if (localStorage.getItem("highScores") !== null) {
-        highScores = localStorage.getItem("highScores");
+        highScores = JSON.parse(localStorage.getItem("highScores"));
     }
 
     // Fills high score list's innerhtml with values from 2D array.
