@@ -1,0 +1,100 @@
+header {
+    display: block;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+    margin-left: 4%;
+    margin-right: 4%;
+}
+
+h1 {
+    font-size: 275%;
+    font-weight: bold;
+    border-bottom: 4px solid #0177f5;
+    margin-bottom: 4%;
+}
+
+h2 {
+    font-size: 200%;
+    font-weight: bold;
+}
+
+.top-bar {
+    margin-bottom: 4%;
+    font-size: 150%;
+    display: flex;
+}
+
+#timer {
+    display: flex;
+    padding-left: 60%;
+    float: right;
+}
+
+p {
+    font-size: 150%;
+    margin-bottom: 2%;
+}
+
+.results {
+    font-size: 150%;
+}
+
+#bottom-bar {
+    display: block;
+    margin-top: 4%;
+    padding-top: 2%;
+    border-top: 2px solid gray;
+}
+
+section {
+    display: none;
+}
+
+.card-high-scores {
+    border: 2px solid rgb(85, 85, 85);
+    border-radius: 6px;
+    margin-bottom: 2%;
+}
+
+#score-list {
+    padding: 2px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: lightgray;
+}
+
+.btn {
+    background-color: #0177f5;
+    color: white;
+    font-weight: bold;
+    font-size: 150%;
+    padding: 16px;
+    border-radius: 6px;
+    border-color:#0177f5 ;
+    display: block;
+    margin-bottom: 1%;
+}
+
+#go-back-button {
+    display: inline;
+    margin-right: 1%;
+}
+
+#clear-scores-button {
+    display: inline;
+}
+
+
+.btnSmall {
+    background-color: #0177f5;
+    color: white;
+    font-weight: bold;
+    font-size: 100%;
+    padding: 5px;
+    border-radius: 6px;
+    border-color:#0177f5 ;
+}

@@ -9,19 +9,43 @@ var question7 = document.querySelector("#question-7");
 var question8 = document.querySelector("#question-8");
 var question9 = document.querySelector("#question-9");
 var question10 = document.querySelector("#question-10");
-var quizOver = document.querySelector("#quiz-over");
+var quizOverPage = document.querySelector("#quiz-over");
+var quizScorePage = document.querySelector("#high-scores");
 
 var startButton = document.querySelector("#start-button");
+var submitButton = document.querySelector("#submit-button");
+var goBackButton = document.querySelector("#go-back-button");
+var clearScoresButton = document.querySelector("#clear-scores-button");
+var highScoreLink = document.querySelector("#high-scores-link");
+
 var timerEl = document.querySelector("#timer");
 var isCorrectEl = document.querySelector("#bottom-bar");
-var finalScoreEl = document.querySelector("#final-score")
+var finalScoreEl = document.querySelector("#final-score");
+var scoreListEl = document.querySelector("#score-list");
 
 var timeLeft;
 var timerInterval;
-var currentQuestion;
+var highScores = [];
 var answerKey = ['b', 'd', 'a', 'c', 'b', 'c', 'd', 'c', 'b', 'a'];
 var questions = [question1, question2, question3, question4, question5, question6, question7, question8, question9, question10];
 
+
+/*
+    Clears all pages and elements from the screen.
+    Exceptions include: the top header, high score link, and footer.
+*/
+function clearScreen()
+{
+    startPage.style.display = 'none';
+    isCorrectEl.style.display = 'none';
+    timerEl.style.display = 'none';
+    for (let x = 0; x < questions.length; x++)
+    {
+        questions[x].style.display = 'none';
+    }
+    quizOverPage.style.display = 'none';
+    quizScorePage.style.display = 'none';
+}
 
 /* 
     Makes start page visible and hides all others.
@@ -29,12 +53,8 @@ var questions = [question1, question2, question3, question4, question5, question
 */
 function openStartPage()
 {
+    clearScreen();
     startPage.style.display = 'block';
-    quizOver.style.display = 'none';
-    for (let x = 0; x < questions.length; x++)
-    {
-        questions[x].style.display = 'none';
-    }
 
     // When start button is pressed, start the quiz.
     startButton.addEventListener("click", function(event) {
@@ -47,16 +67,19 @@ function startQuiz()
 {
     timerEl.style.display = 'block';
     isCorrectEl.style.display = 'block';
+
     startTimer();
-    openQuestion(1);
+    openQuestionPage(1);
 }
 
 // Creates a 5 minute timer.
-function startTimer() {
+function startTimer() 
+{
+    timerEl.style.display = 'block';
     timeLeft = 400;
     timerInterval = setInterval(function () {
         if (timeLeft >= 1) {
-            timerEl.textContent = timeLeft;
+            timerEl.textContent = "Time left: " + timeLeft;
             timeLeft--;
         }
         else {
@@ -70,26 +93,31 @@ function startTimer() {
     Displays the question page corresponding to the input number.
     Updates the currentQuestion and hides all sections except for the currentQuestion's page.
 */
-function openQuestion(number)
+function openQuestionPage(number)
 {
-    currentQuestion = number;
-    startPage.style.display = 'none';
-    for (let x = 0; x < questions.length; x++)
-    {
-        questions[x].style.display = 'none';
+    var currentQuestion = number;
+    
+    // Clears the previous question if there is one, else clears start page.
+    if (currentQuestion > 1) {
+        questions[currentQuestion - 2].style.display = 'none';
     }
-    questions[number - 1].style.display = 'block';
+    else {
+        startPage.style.display = 'none';
+    }
+
+    // Now display the new question.
+    questions[currentQuestion - 1].style.display = 'block';
 
     /*  
-    The 4 following event listeners create 4 buttons for each question.
-    If answer matches answerKey, than correct is displayed.
-    Else, the answer doesn't match answerKey, so incorrect is displayed and timer is decremented by 10.
-    After, the next question is opened.
+        The 4 following event listeners create 4 buttons for each question.
+        If answer matches answerKey, than correct is displayed.
+        Else, the answer doesn't match answerKey, so incorrect is displayed and timer is decremented by 10.
+        After, the next question is opened.
     */
-    var aButton = document.querySelector("#answer-a" + number);
-    var bButton = document.querySelector("#answer-b" + number);
-    var cButton = document.querySelector("#answer-c" + number);
-    var dButton = document.querySelector("#answer-d" + number);
+    var aButton = document.querySelector("#answer-a" + currentQuestion);
+    var bButton = document.querySelector("#answer-b" + currentQuestion);
+    var cButton = document.querySelector("#answer-c" + currentQuestion);
+    var dButton = document.querySelector("#answer-d" + currentQuestion);
 
     aButton.addEventListener("click", function(event) {
         if (answerKey[currentQuestion -  1] === 'a') {
@@ -97,15 +125,20 @@ function openQuestion(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10) {
-            openQuestion(currentQuestion + 1);
+            
+            openQuestionPage(currentQuestion + 1);
         }
-
         else {
-            openQuizOver();
+            openQuizOverPage();
         }
     });
 
@@ -115,14 +148,19 @@ function openQuestion(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10){
-            openQuestion(currentQuestion + 1);
+            openQuestionPage(currentQuestion + 1);
         }
         else {
-            openQuizOver();
+            openQuizOverPage();
         }
     });
 
@@ -132,14 +170,19 @@ function openQuestion(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10) {
-            openQuestion(currentQuestion + 1);
+            openQuestionPage(currentQuestion + 1);
         }
         else {
-            openQuizOver();
+            openQuizOverPage();
         }
     });
 
@@ -149,14 +192,19 @@ function openQuestion(number)
         }
         else {
             isCorrectEl.textContent = "Incorrect";
-            timeLeft = timeLeft - 10;
+            if (timeLeft - 10 >= 0) {
+                timeLeft = timeLeft - 10;
+            }
+            else {
+                time = 0;
+            }
         }
 
         if (currentQuestion < 10) {
-            openQuestion(currentQuestion + 1);
+            openQuestionPage(currentQuestion + 1);
         }
         else {
-            openQuizOver();
+            openQuizOverPage();
         }
     });
 }
@@ -166,17 +214,113 @@ function openQuestion(number)
     The timer is cleared and the quizOver screen opened. This screen allows the user to see their score
     and enter their initials into the high scores list. 
 */
-function openQuizOver()
+function openQuizOverPage()
 {
     clearInterval(timerInterval);
-    question10.style.display = 'none';
-    timerEl.style.display = 'none';
-    isCorrectEl.style.display = 'none';
-    quizOver.style.display = 'block';
-    finalScoreEl.textContent = "Your final score is: " + timeLeft;
+    clearScreen();
+    quizOverPage.style.display = 'block';
+    var score = timeLeft;
 
-    //TODO: Create input box for user's intitials for the high score list and save user's score information.
+    finalScoreEl.textContent = "Your final score is: " + score;
+
+    // Collects initials from the user and stores their score in a 2D array for high scores using local storage.
+    submitButton.addEventListener("click", function(event) {
+        event.preventDefault();       
+        var initials = document.querySelector("#initials").value
+
+        if (initials === null) {
+            alert("Initials cannot be blank.");
+        }
+        else {
+            var tempScoreArray;
+            var newScore = [initials, score];
+            var scoreChecked = newScore;
+
+            // Sorts high scores if array is bigger than 0.
+            if(highScores.length > 0) {
+                for (var x = 0; x < highScores.length; x++)
+                {   
+                    // Checks if score is bigger or equal to current score.            
+                    if (scoreChecked[1] >= highScores[x][1]) {
+                        // Store old values in temp array.
+                        tempScoreArray = highScores[x];
+                        
+                        // Put in the new values.
+                        highScores[x] = scoreChecked;
+
+                        // Now old array will be compared with rest of the 2D array.                    
+                        scoreChecked = tempScoreArray;
+                    }
+                }
+            }
+            // Else fill first index with the array from scoreChecked.
+            else {
+                highScores[0] = scoreChecked;
+            }
+
+            // Add highScores 2D array to local storage and open high scores page. 
+            localStorage.setItem("highScores", JSON.stringify(highScores));
+            openHighScoresPage();
+        }
+    });
+}
+
+/*
+    Opens the high scores page and grabs the scores from local storage if there are any.
+    If the user wants to go back to start page or clear high scores, there are buttons for both.
+*/
+function openHighScoresPage()
+{
+    clearScreen();
+    quizScorePage.style.display = 'block';
+
+    // Button that goes back to start screen.
+    goBackButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        openStartPage();
+        return;
+    });
+
+    // Button that clears high score list.
+    clearScoresButton.addEventListener("click", function(even) {
+        highScores = [];
+        localStorage.clear();
+        for (var r = 0; r < highScores.length; r++)
+        {
+            var scoreRow = document.querySelector("#score" + r);
+            scoreRow.innerHTML = " ";
+        }
+        return;
+    });
+
+    // Check if highScores is in local storage and grabs its value.
+    if (localStorage.getItem("highScores") !== null) {
+        highScores = JSON.parse(localStorage.getItem("highScores"));
+    }
+
+    // Fills high score list's innerhtml with values from 2D array.
+    for (var r = 0; r < highScores.length; r++)
+    {
+        //If each index has a value, fill list with each index.
+        if (highScores[r] !== null) {
+            var scoreRow = document.querySelector("#score" + r);
+            scoreRow.innerHTML = "" + highScores[r][0] + " " + highScores[r][1]; 
+        }
+
+        //Else, fill list with blank space.
+        else {
+            var scoreRow = document.querySelector("#score" + r);
+            scoreRow.innerHTML = " ";
+        }
+    }
 }
 
 // When webpage is opened, the start page is opened first.
 openStartPage();
+
+// When high score link is clicked, show high score page.
+highScoreLink.addEventListener("click", function(event) {
+    event.preventDefault();
+    clearInterval(timerInterval);
+    openHighScoresPage();
+});
