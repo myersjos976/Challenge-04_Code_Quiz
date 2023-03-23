@@ -4,7 +4,7 @@
 Creates a timed coding quiz consisting of multiple choice questions and includes a list of high scores.
 
 ## Screenshot
-![image](https://user-images.githubusercontent.com/122832005/227318574-3c931197-174f-4ded-8e8a-51a67927a560.png)
+![image](https://user-images.githubusercontent.com/122832005/227318945-870085bc-7d83-4761-ba3f-92ee41b837d2.png)
 
 
 
